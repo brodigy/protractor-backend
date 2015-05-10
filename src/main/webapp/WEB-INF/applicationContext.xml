@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xmlns="http://www.springframework.org/schema/beans"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config/>
+	<mvc:annotation-driven/>
+	<context:property-placeholder/>
+
+	<mvc:interceptors>
+		<ref bean="headerEnricherFilter"/>
+	</mvc:interceptors>
+
+	<context:component-scan base-package="net.protractor.controller, net.protractor.filter"/>
+
+	<bean id="jacksonObjectMapper"
+		  class="com.fasterxml.jackson.databind.ObjectMapper">
+		<property name="serializationInclusion" value="NON_NULL"/>
+	</bean>
+
+	<!--<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">-->
+		<!--<property name="targetObject" ref="jacksonObjectMapper"/>-->
+		<!--<property name="targetMethod" value="registerModule"/>-->
+		<!--<property name="arguments">-->
+			<!--<list>-->
+				<!--<bean class="com.fasterxml.jackson.datatype.joda.JodaModule"/>-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+	
+	<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jacksonMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	
+</beans>
