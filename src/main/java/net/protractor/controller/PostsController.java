@@ -16,13 +16,17 @@ import java.util.Collection;
 @Controller
 public class PostsController {
 
-	public static Collection<Post> posts = new ArrayList<Post>();
+	public static ArrayList<Post> posts = new ArrayList<Post>();
 
 	@RequestMapping(value = "/posts", method = {RequestMethod.GET })
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Collection<Post> search() {
-		return samplePosts();
+	public ArrayList<Post> search() {
+		if(PostsController.posts.size() == 0 ) {
+			 PostsController.posts.addAll(samplePosts());
+		}
+
+		return PostsController.posts;
 	}
 
 	@RequestMapping(value = "/**", method = { RequestMethod.OPTIONS })
@@ -42,13 +46,15 @@ public class PostsController {
 			InputStreamReader reader = new InputStreamReader(request.getInputStream());
 			post = objectMapper.readValue(reader, Post.class);
 		}
+
+		PostsController.posts.add(post);
 		
 		return post;
 	}
 
-	private Collection<Post> samplePosts() {
+	private ArrayList<Post> samplePosts() {
 
-		Collection<Post> posts = new ArrayList<Post>();
+		ArrayList<Post> posts = new ArrayList<Post>();
 
 		posts.add(new Post("MIT Study suggests current solar power tech is good enough",
 				"The standard line about solar power is that while good in theory, the technology just isn't there to keep our lights on and our Netflix streaming. But a new study from MIT (PDF) suggests that's not the case. According to the massive report (an epic 356 pages) current crystalline silicon photovoltaic technology is capable of delivering terawatt-scale power by 2050. That would be many times larger than Topaz facility California that generates 550 megawatts. While there is certainly room for improvement in efficiency, the MIT study says that the biggest hurdle isn't tech, it's investment. The authors called out the lack of funding for research and development, but focused more on poor governmental policies. Subsidies generally go to other energy sources, like oil and natural gas, and trade policies set by the federal government have driven up prices by restricting imports of cheaper solar parts in order to boost domestic production.", "MIT"));
