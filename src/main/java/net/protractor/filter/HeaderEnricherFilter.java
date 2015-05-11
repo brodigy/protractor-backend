@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component("headerEnricherFilter")
 public class HeaderEnricherFilter implements HandlerInterceptor {
 
-	private String clientBaseUrl = "http://localhost:8888";
+	private String clientUrl = "http://localhost:8888";
 
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -22,11 +22,12 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 			response.setHeader("Auth",authHeader);
 		}
 
-		response.setHeader("Access-Control-Allow-Origin", clientBaseUrl);
+		response.setHeader("Access-Control-Allow-Origin", clientUrl);
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-		response.setHeader("Access-Control-Max-Age", "60");
-		response.setHeader("Access-Control-Allow-Headers", "Auth, Origin, X-Requested-With, Content-Type, Accept");
-		response.setHeader("Content-Type", "application/json;charset=UTF-8");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers", "Auth, x-requested-with, content-type");
+		//response.setHeader("Access-Control-Allow-Headers", "Auth, Origin, X-Requested-With, Content-Type, Accept");
+
 
 		return true;
 	}
@@ -41,6 +42,6 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 	}
 
 	public void setClientBaseUrl(String clientBaseUrl) {
-		this.clientBaseUrl = clientBaseUrl;
+		this.clientUrl = clientUrl;
 	}
 }

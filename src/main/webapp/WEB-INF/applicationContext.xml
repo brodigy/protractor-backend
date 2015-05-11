@@ -13,6 +13,7 @@
 	<mvc:annotation-driven/>
 	<context:property-placeholder/>
 
+
 	<mvc:interceptors>
 		<ref bean="headerEnricherFilter"/>
 	</mvc:interceptors>
@@ -24,16 +25,6 @@
 		<property name="serializationInclusion" value="NON_NULL"/>
 	</bean>
 
-	<!--<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">-->
-		<!--<property name="targetObject" ref="jacksonObjectMapper"/>-->
-		<!--<property name="targetMethod" value="registerModule"/>-->
-		<!--<property name="arguments">-->
-			<!--<list>-->
-				<!--<bean class="com.fasterxml.jackson.datatype.joda.JodaModule"/>-->
-			<!--</list>-->
-		<!--</property>-->
-	<!--</bean>-->
-	
 	<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
@@ -42,5 +33,5 @@
 			</list>
 		</property>
 	</bean>
-	
+
 </beans>
