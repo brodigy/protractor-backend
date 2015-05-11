@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,21 +18,32 @@ public class PostsController {
 
 	public static Collection<Post> posts = new ArrayList<Post>();
 
-	@RequestMapping(value = "/posts", method = { RequestMethod.OPTIONS, RequestMethod.GET })
+	@RequestMapping(value = "/posts", method = {RequestMethod.GET })
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Collection<Post> search() {
 		return samplePosts();
 	}
 
-	@RequestMapping(value = "/publishPost", method = { RequestMethod.OPTIONS, RequestMethod.POST })
+	@RequestMapping(value = "/**", method = { RequestMethod.OPTIONS })
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public String save(@RequestBody Post post) {
-		System.out.println(post.getTitle());
-		System.out.println(post.getMessage());
-		//posts.add(post);
-		return post.getTitle() + post.getMessage() + post.getAuthor();
+	public void options() {}
+
+	@RequestMapping(value = "/publishPost", method = { RequestMethod.POST })
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public Post save(HttpServletRequest request) throws IOException {
+
+		Object queryString = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		Post post = null;
+		if(request.getInputStream() != null) {
+			InputStreamReader reader = new InputStreamReader(request.getInputStream());
+			post = objectMapper.readValue(reader, Post.class);
+		}
+		
+		return post;
 	}
 
 	private Collection<Post> samplePosts() {

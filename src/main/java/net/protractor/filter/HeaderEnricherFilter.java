@@ -23,11 +23,10 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 		}
 
 		response.setHeader("Access-Control-Allow-Origin", clientUrl);
-		response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
 		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "Auth, x-requested-with, content-type");
+		response.setHeader("Access-Control-Allow-Headers", "Auth, Accept, x-requested-with, content-type");
 		//response.setHeader("Access-Control-Allow-Headers", "Auth, Origin, X-Requested-With, Content-Type, Accept");
-
 
 		return true;
 	}
@@ -42,6 +41,6 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 	}
 
 	public void setClientBaseUrl(String clientBaseUrl) {
-		this.clientUrl = clientUrl;
+		this.clientUrl = clientBaseUrl;
 	}
 }
