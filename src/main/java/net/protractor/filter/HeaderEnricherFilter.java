@@ -56,6 +56,12 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 				response.setHeader("Auth", token.getToken());
 				response.setContentType("application/json;charset=UTF-8");
 				objectMapper.writer().writeValue(response.getWriter(), token);
+
+			} else {
+				response.setStatus(HttpStatus.UNAUTHORIZED.value());
+				response.setContentType("application/json;charset=UTF-8");
+				Fault fault = new Fault("E101", "Unauthorized access");
+				objectMapper.writer().writeValue(response.getWriter(), fault);
 			}
 		}
 
