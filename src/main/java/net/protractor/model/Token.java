@@ -4,20 +4,22 @@ import org.joda.time.DateTime;
 
 public class Token {
 
+	private String username;
 	private String token;
-	private DateTime creationDate;
+	private Long timestamp;
 
-	public Token(String token) {
+	public Token(String token, String username) {
 		this.token = token;
-		this.creationDate = new DateTime();
+		this.username = username;
+		this.timestamp = new DateTime().getMillis();
 	}
 
-	public DateTime getCreationDate() {
-		return creationDate;
+	public Long getCreationDate() {
+		return timestamp;
 	}
 
-	public void setCreationDate(DateTime creationDate) {
-		this.creationDate = creationDate;
+	public void setCreationDate(Long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public String getToken() {
@@ -26,5 +28,13 @@ public class Token {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
