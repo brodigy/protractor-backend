@@ -50,8 +50,8 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		if (request.getPathInfo().equals("/login")) {
-			if (request.getParameter("username").equals("alex") && request.getParameter("password").equals("password")) {
-				Token token = generateToken(request.getParameter("username"));
+			if (request.getParameter("email").equals("alex@endava.com") && request.getParameter("password").equals("password")) {
+				Token token = generateToken(request.getParameter("email"));
 				activeTokens.add(token);
 				response.setHeader("Auth", token.getToken());
 				response.setContentType("application/json;charset=UTF-8");

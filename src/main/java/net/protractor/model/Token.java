@@ -4,13 +4,13 @@ import org.joda.time.DateTime;
 
 public class Token {
 
-	private String username;
+	private String email;
 	private String token;
 	private Long timestamp;
 
-	public Token(String token, String username) {
+	public Token(String token, String email) {
 		this.token = token;
-		this.username = username;
+		this.email = email;
 		this.timestamp = new DateTime().getMillis();
 	}
 
@@ -31,10 +31,10 @@ public class Token {
 	}
 
 	public String getUsername() {
-		return username;
+		return email;
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.email = username;
 	}
 }

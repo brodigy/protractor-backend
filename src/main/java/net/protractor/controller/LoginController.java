@@ -15,7 +15,7 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = { RequestMethod.OPTIONS, RequestMethod.HEAD, RequestMethod.GET })
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public void search(@RequestParam("username") String username) {
+	public void search(@RequestParam("email") String email) {
 
 	}
 
