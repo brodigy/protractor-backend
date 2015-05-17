@@ -3,17 +3,13 @@ package net.protractor.filter;
 import net.protractor.model.Fault;
 import net.protractor.model.Token;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
