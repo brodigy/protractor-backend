@@ -30,6 +30,15 @@ public class PostsController {
 		return PostsController.posts;
 	}
 
+	@RequestMapping(value = "/clear", method = {RequestMethod.GET })
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public Integer clear() {
+		PostsController.posts.clear();
+
+		return PostsController.posts.size();
+	}
+
 	@RequestMapping(value = "/**", method = { RequestMethod.OPTIONS })
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
@@ -40,7 +49,6 @@ public class PostsController {
 	@ResponseBody
 	public Post save(HttpServletRequest request) throws IOException {
 
-		Object queryString = null;
 		ObjectMapper objectMapper = new ObjectMapper();
 		Post post = null;
 		if(request.getInputStream() != null) {
