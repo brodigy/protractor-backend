@@ -1,6 +1,7 @@
 package net.protractor.controller;
 
 import net.protractor.model.Post;
+import net.protractor.model.User;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class PostsController {
 
 	public static ArrayList<Post> posts = new ArrayList<Post>();
+	public static ArrayList<User> users = new ArrayList<User>();
 
 	@RequestMapping(value = "/posts", method = {RequestMethod.GET })
 	@ResponseStatus(HttpStatus.OK)
@@ -59,6 +61,31 @@ public class PostsController {
 		PostsController.posts.add(post);
 		
 		return post;
+	}
+
+	@RequestMapping(value = "/saveUser", method = { RequestMethod.POST })
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public User saveUser(HttpServletRequest request) throws IOException {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		User user = null;
+		if(request.getInputStream() != null) {
+			InputStreamReader reader = new InputStreamReader(request.getInputStream());
+			user = objectMapper.readValue(reader, User.class);
+		}
+
+		PostsController.users.add(user);
+
+		return user;
+	}
+
+	@RequestMapping(value = "/users", method = {RequestMethod.GET })
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public ArrayList<User> getUsers() {
+
+		return PostsController.users;
 	}
 
 	private ArrayList<Post> samplePosts() {

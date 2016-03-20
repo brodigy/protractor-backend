@@ -1,7 +1,10 @@
 package net.protractor.filter;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import net.protractor.controller.PostsController;
 import net.protractor.model.Fault;
 import net.protractor.model.Token;
+import net.protractor.model.User;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -46,7 +49,8 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		if (request.getPathInfo().equals("/login")) {
-			if (request.getParameter("email").equals("alex@endava.com") && request.getParameter("password").equals("password")) {
+			if (validateUser(request.getParameter("email"), request.getParameter("password"))) {
+
 				Token token = generateToken(request.getParameter("email"));
 				activeTokens.add(token);
 				response.setHeader("Auth", token.getToken());
@@ -61,6 +65,20 @@ public class HeaderEnricherFilter implements HandlerInterceptor {
 			}
 		}
 
+	}
+
+	private Boolean validateUser(String username, String password) {
+
+		if (username.equals("alex@endava.com") && password.equals("password") ) {
+			return true;
+		}
+
+		for (User user : PostsController.users) {
+			if(user.getUsername().equals(username) && user.getPassword().equals(password))
+				return true;
+		}
+
+		return false;
 	}
 
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
