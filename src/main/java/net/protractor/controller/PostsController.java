@@ -2,6 +2,8 @@ package net.protractor.controller;
 
 import net.protractor.model.Post;
 import net.protractor.model.User;
+import net.protractor.model.UsersConfig;
+import net.protractor.utils.RandomString;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 @Controller
 public class PostsController {
@@ -21,18 +24,19 @@ public class PostsController {
 	public static ArrayList<Post> posts = new ArrayList<Post>();
 	public static ArrayList<User> users = new ArrayList<User>();
 
-	@RequestMapping(value = "/posts", method = {RequestMethod.GET })
+
+	@RequestMapping(value = "/posts", method = {RequestMethod.GET})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public ArrayList<Post> search() {
-		if(PostsController.posts.size() == 0 ) {
-			 PostsController.posts.addAll(samplePosts());
+		if (PostsController.posts.size() == 0) {
+			PostsController.posts.addAll(samplePosts());
 		}
 
 		return PostsController.posts;
 	}
 
-	@RequestMapping(value = "/clear", method = {RequestMethod.GET })
+	@RequestMapping(value = "/clear", method = {RequestMethod.GET})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Integer clear() {
@@ -41,36 +45,46 @@ public class PostsController {
 		return PostsController.posts.size();
 	}
 
-	@RequestMapping(value = "/**", method = { RequestMethod.OPTIONS })
+	@RequestMapping(value = "/clearUsers", method = {RequestMethod.GET})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public void options() {}
+	public Integer clearUsers() {
+		PostsController.users.clear();
 
-	@RequestMapping(value = "/publishPost", method = { RequestMethod.POST })
+		return PostsController.users.size();
+	}
+
+	@RequestMapping(value = "/**", method = {RequestMethod.OPTIONS})
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public void options() {
+	}
+
+	@RequestMapping(value = "/publishPost", method = {RequestMethod.POST})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Post save(HttpServletRequest request) throws IOException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		Post post = null;
-		if(request.getInputStream() != null) {
+		if (request.getInputStream() != null) {
 			InputStreamReader reader = new InputStreamReader(request.getInputStream());
 			post = objectMapper.readValue(reader, Post.class);
 		}
 
 		PostsController.posts.add(post);
-		
+
 		return post;
 	}
 
-	@RequestMapping(value = "/saveUser", method = { RequestMethod.POST })
+	@RequestMapping(value = "/saveUser", method = {RequestMethod.POST})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public User saveUser(HttpServletRequest request) throws IOException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		User user = null;
-		if(request.getInputStream() != null) {
+		if (request.getInputStream() != null) {
 			InputStreamReader reader = new InputStreamReader(request.getInputStream());
 			user = objectMapper.readValue(reader, User.class);
 		}
@@ -80,12 +94,42 @@ public class PostsController {
 		return user;
 	}
 
-	@RequestMapping(value = "/users", method = {RequestMethod.GET })
+	@RequestMapping(value = "/generateUsers", method = {RequestMethod.POST})
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public int generateUsers(HttpServletRequest request) throws IOException {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		UsersConfig usersConfig = null;
+		if (request.getInputStream() != null) {
+			InputStreamReader reader = new InputStreamReader(request.getInputStream());
+			usersConfig = objectMapper.readValue(reader, UsersConfig.class);
+		}
+
+		generateUsers(usersConfig.getNumber());
+
+
+		return PostsController.users.size();
+	}
+
+	@RequestMapping(value = "/users", method = {RequestMethod.GET})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public ArrayList<User> getUsers() {
 
 		return PostsController.users;
+	}
+
+	private void generateUsers(int nr) {
+		for(int i = 0; i < nr; i++){
+			RandomString randomString = new RandomString(10);
+			String[] genders = {"Male", "Female", "Unspecified"};
+			Random random = new Random();
+
+			PostsController.users.add(
+					new User(randomString.nextString(), randomString.nextString(), randomString.nextString(), genders[random.nextInt(2)], randomString.nextString()));
+		}
+
 	}
 
 	private ArrayList<Post> samplePosts() {
